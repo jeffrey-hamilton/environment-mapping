@@ -580,12 +580,12 @@ function loadCubeMap(){
 			["plate5.bmp", gl.TEXTURE_CUBE_MAP_NEGATIVE_Z],
 			["plate6.bmp", gl.TEXTURE_CUBE_MAP_NEGATIVE_Y]]; */
 
-	images = [["/cubemaps/yokohama/posx.jpg", gl.TEXTURE_CUBE_MAP_POSITIVE_X],
-			["/cubemaps/yokohama/negx.jpg", gl.TEXTURE_CUBE_MAP_NEGATIVE_X],
-			["/cubemaps/yokohama/posy.jpg", gl.TEXTURE_CUBE_MAP_POSITIVE_Y],
-			["/cubemaps/yokohama/negy.jpg", gl.TEXTURE_CUBE_MAP_NEGATIVE_Y],
-			["/cubemaps/yokohama/posz.jpg", gl.TEXTURE_CUBE_MAP_POSITIVE_Z],
-			["/cubemaps/yokohama/negz.jpg", gl.TEXTURE_CUBE_MAP_NEGATIVE_Z]];
+	images = [["cubemaps/yokohama/posx.jpg", gl.TEXTURE_CUBE_MAP_POSITIVE_X],
+			["cubemaps/yokohama/negx.jpg", gl.TEXTURE_CUBE_MAP_NEGATIVE_X],
+			["cubemaps/yokohama/posy.jpg", gl.TEXTURE_CUBE_MAP_POSITIVE_Y],
+			["cubemaps/yokohama/negy.jpg", gl.TEXTURE_CUBE_MAP_NEGATIVE_Y],
+			["cubemaps/yokohama/posz.jpg", gl.TEXTURE_CUBE_MAP_POSITIVE_Z],
+			["cubemaps/yokohama/negz.jpg", gl.TEXTURE_CUBE_MAP_NEGATIVE_Z]];
 
 	for(var i = 0; i < images.length; i++){
 		var face = images[i][1];
