@@ -1,0 +1,126 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Model Viewer</title>
+
+        <link type="text/css" rel="stylesheet" href="/css/styles.css">
+        <script type="text/javascript" src="/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/sylvester.js"></script>
+        <script type="text/javascript" src="/js/math.js"></script>
+        <script type="text/javascript" src="/js/glUtils.js"></script>
+        <script type="text/javascript" src="/js/meshLoader.js"></script>
+        <script type="text/javascript" src="/js/arcball.js"></script>
+        <script type="text/javascript" src="/js/demo.js"></script>
+        <script type="text/javascript" src="/js/main.js"></script>
+    </head>
+
+    <body cz-shortcut-listen="true" style="">
+        <canvas id="glcanvas" width="1000" height="750">canvas not supported</canvas>
+
+        <div id="meshSelect-wrapper">
+            <p>
+                <span>Select object from this directory (.obj files only)</span>
+                <select id="meshSelect">
+                    <option>cube.obj</option>
+                    <option selected="selected">sphere.obj</option>
+                </select>
+                <br>
+                <span>Or upload a local file here:</span>
+                <input type="file" id="files" name="files[]">
+            </p>
+        </div>
+
+        <script id="Step4VertexShader" type="x-shader/x-vertex">
+            #ifdef GL_OES_standard_derivatives
+                #extension GL_OES_standard_derivatives : enable
+            #endif
+            precision mediump float;
+
+            attribute vec3 vPos;
+            attribute vec3 bary;
+            attribute vec3 norm;
+            attribute vec2 texCoord;
+
+            varying vec3 lightColor;
+            varying vec3 vertexPosition;
+            varying vec3 vertexNormal;
+            varying vec2 interpTexCoords;
+            varying vec3 reflected;
+            varying vec3 cameraPosition;
+
+            uniform mat4 uMVMatrix;
+            uniform mat4 uPMatrix;
+            uniform vec3 lightPos;
+
+            // Material properties
+            uniform vec3 materialAmb;
+            uniform vec3 materialDiff;
+            uniform vec3 materialSpec;
+            uniform float materialShine;
+
+            // Light properties
+            uniform vec3 lightAmb;
+            uniform vec3 lightDiff;
+            uniform vec3 lightSpec;
+
+            uniform samplerCube sampler;
+
+            void main(){
+                vertexPosition = vPos;
+                vertexNormal = norm;
+                gl_Position = uPMatrix * uMVMatrix * vec4(vPos, 1.0);
+            }
+        </script>
+
+        <script id="Step4FragmentShader" type="x-shader/x-fragment">
+            #ifdef GL_OES_standard_derivatives
+            #extension GL_OES_standard_derivatives : enable
+            #endif
+            precision mediump float;
+
+            varying vec3 lightColor;
+            varying vec3 vertexPosition;    // Interpolated fragment position
+            varying vec3 vertexNormal;      // Interpolated fragment normal
+            varying vec2 interpTexCoords;
+            varying vec3 reflected;
+            varying vec3 cameraPosition;
+
+            uniform mat4 uMVMatrix;
+            uniform mat4 uPMatrix;
+            uniform vec3 lightPos;          // Position of the light (at the camera)
+
+            // Material properties
+            uniform vec3 materialAmb;
+            uniform vec3 materialDiff;
+            uniform vec3 materialSpec;
+            uniform float materialShine;
+
+            // Light properties
+            uniform vec3 lightAmb;
+            uniform vec3 lightDiff;
+            uniform vec3 lightSpec;
+
+            uniform samplerCube sampler;
+
+            void main(){
+                vec3 fragPos = vec3(uMVMatrix * vec4(vertexPosition, 1));
+                vec3 fragNorm = normalize(vec3(mat3(uMVMatrix) * vertexNormal));
+                vec3 ref = reflect(fragPos, fragNorm);
+                vec3 reflection_angle = vec3(uMVMatrix * vec4(ref, 0.0));
+
+                gl_FragColor = textureCube(sampler, reflection_angle);
+            }
+        </script>
+
+        <script>
+            //grab the filename for the .obj we will first open
+            var filename = "/meshes/sphere.obj";
+
+            //register callbacks for mesh loading
+            setupLoadingCallbacks();
+
+            //call the main mesh Loading function; main.js
+            executeMainLoop(filename);
+        </script>
+    </body>
+</html>
